@@ -1,10 +1,18 @@
-import Login from "./Components/Login/Login";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Body from "./Components/Body";
+import Browse from "./Components/Browse";
 function App() {
-  return (
-    <>
-      <Login />
-    </>
-  );
+  const approute = createBrowserRouter([
+    {
+      path: "/",
+      element: <Body />,
+    },
+    {
+      path: "/browse",
+      element: <Browse />,
+    },
+  ]);
+  return <RouterProvider router={approute} />;
 }
 
 export default App;

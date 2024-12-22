@@ -6,14 +6,32 @@ const Login = () => {
   const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
-  console.log(name);
+
+  const handleSignInClick = () => {
+    let checkPassword =
+      /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(
+        password.current.value
+      );
+    let checkMail = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(
+      email.current.value
+    );
+    console.log(password.current.value);
+    if (!checkPassword) {
+      return "password is invalid";
+    }
+    if (!checkMail) {
+      return "email is invalid";
+    }
+    return null;
+  };
+
   const handleSignIn = () => {
     setIsSignIn(!isSignIn);
   };
 
   return (
     <div
-      className="flex items-center justify-center h-screen bg-gray-800"
+      className="flex items-center justify-center h-screen bg-gradient-to-b from-black"
       style={{ backgroundImage: `url(${background})` }}
       onSubmit={(e) => e.preventDefault()}
     >
@@ -40,7 +58,12 @@ const Login = () => {
           placeholder="Password"
           className="p-2 mt-4 bg-gray-700 w-full rounded"
         />
-        <button className="w-full bg-red-600 p-2 mt-6 rounded ">
+        <button
+          className="w-full bg-red-600 p-2 mt-6 rounded "
+          onClick={() => {
+            console.log(handleSignInClick());
+          }}
+        >
           {isSignIn ? "Sign In" : "Sign Up"}
         </button>
         <button className="text-sm font-thin mt-2" onClick={handleSignIn}>
