@@ -1,32 +1,80 @@
 import React, { useRef, useState } from "react";
 import background from "../../asset/img/background.jpg";
+import { Validation } from "../../utils/helper";
+import { auth } from "../Firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
+  const [error, setError] = useState("");
   const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
-
-  const handleSignInClick = () => {
-    let checkPassword =
-      /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(
-        password.current.value
-      );
-    let checkMail = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(
-      email.current.value
-    );
-    console.log(password.current.value);
-    if (!checkPassword) {
-      return "password is invalid";
-    }
-    if (!checkMail) {
-      return "email is invalid";
-    }
-    return null;
-  };
+  console.log(error);
 
   const handleSignIn = () => {
     setIsSignIn(!isSignIn);
+  };
+
+  const handleSignInandSignUp = () => {
+    let message = Validation(email.current.value, password.current.value);
+    setError(
+      isSignIn
+        ? message
+        : message != null
+        ? "Password should contain atleast 8 character, one special character, one capital letter and one small letter and one number"
+        : null
+    );
+
+    if (message) return;
+
+    if (!isSignIn) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: "https://example.com/jane-q-user/profile.jpg",
+          })
+            .then(() => {
+              // Profile updated!
+              // ...
+            })
+            .catch((error) => {
+              // An error occurred
+              // ...
+            });
+          // Signed up
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError(errorCode + errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError(errorCode + errorMessage);
+        });
+    }
   };
 
   return (
@@ -44,6 +92,7 @@ const Login = () => {
             type="text"
             placeholder="Full Name"
             className="p-2 mt-4 bg-gray-700 w-full rounded"
+            required
           />
         )}
         <input
@@ -58,18 +107,17 @@ const Login = () => {
           placeholder="Password"
           className="p-2 mt-4 bg-gray-700 w-full rounded"
         />
+        <p className="text-red-700 text-l font-bold">{error}</p>
         <button
           className="w-full bg-red-600 p-2 mt-6 rounded "
-          onClick={() => {
-            console.log(handleSignInClick());
-          }}
+          onClick={handleSignInandSignUp}
         >
           {isSignIn ? "Sign In" : "Sign Up"}
         </button>
         <button className="text-sm font-thin mt-2" onClick={handleSignIn}>
           {isSignIn
             ? "New to Netflix? Sign Up Now"
-            : "Already registered?Sign In Now"}
+            : "Already registered? Sign In Now"}
         </button>
       </form>
     </div>

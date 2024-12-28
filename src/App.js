@@ -1,4 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store/store";
 import Body from "./Components/Body";
 import Browse from "./Components/Browse";
 function App() {
@@ -12,7 +14,11 @@ function App() {
       element: <Browse />,
     },
   ]);
-  return <RouterProvider router={approute} />;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={approute} />
+    </Provider>
+  );
 }
 
 export default App;
