@@ -13,3 +13,20 @@ export const Validation = (email, password) => {
 
   return null;
 };
+
+export const errorMessage = (errorCode) => {
+  let message;
+  console.log(errorCode === "auth/email-already-in-use");
+  switch (errorCode) {
+    case "auth/email-already-in-use":
+      message =
+        "This email is already registered. Please sign in or use a different email.";
+      break;
+    case "auth/invalid-credential":
+      message = "Invalid credential";
+      break;
+    default:
+      message = "Something went wrong";
+  }
+  return message;
+};
