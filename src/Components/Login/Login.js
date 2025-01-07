@@ -9,11 +9,9 @@ import {
 } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../store/userSlice";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [isSignIn, setIsSignIn] = useState(true);
   const [error, setError] = useState("");
   const name = useRef(null);
@@ -57,7 +55,6 @@ const Login = () => {
                 photoURL: photoURL,
               })
             );
-            navigate("/browse");
           });
         })
         .catch((error) => {
@@ -74,7 +71,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           // const user = userCredential.user;
-          navigate("/browse");
         })
         .catch((error) => {
           setError(errorMessage(error.code));

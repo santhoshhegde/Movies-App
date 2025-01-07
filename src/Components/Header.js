@@ -14,16 +14,14 @@ const Header = () => {
   const user = useSelector((store) => store.user);
   const handleSignOut = () => {
     signOut(auth)
-      .then(() => {
-        navigate("/");
-      })
+      .then(() => {})
       .catch((error) => {
         console.log(error);
       });
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, email, displayName } = user;
         dispatch(addUser({ uid: uid, email: email, displayName: displayName }));
@@ -33,11 +31,12 @@ const Header = () => {
         navigate("/");
       }
     });
+    return () => unsubscribe();
   }, [dispatch, navigate]);
 
   return (
-    <div className="absolute top-0 p-5 w-full bg-gradient-to-b from-black flex justify-between">
-      <img className="w-44" src={Logo} alt="Logo" />
+    <div className="absolute top-0 p-5 w-full bg-gradient-to-b from-black flex justify-between z-50">
+      <img className="w-32" src={Logo} alt="Logo" />
 
       {user && (
         <div>
