@@ -8,7 +8,7 @@ const MoviesList = () => {
 
   return (
     <div className="flex overflow-x-scroll gap-2">
-      {movies?.results.map((movie) => (
+      {movies?.map((movie) => (
         <MovieCard key={movie.id} moviePosterURL={movie.poster_path} />
       ))}
     </div>

@@ -1,28 +1,17 @@
-import { nowPlayingAPIURL, options } from "../utils/Constants";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { addNowPlayingMovies } from "../store/moviesSlice";
 import React from "react";
 import VideoBackground from "./VideoBackground";
-import MoviesList from "./MoviesList";
+import VideoTitle from "./VideoTitle";
+import { useSelector } from "react-redux";
 
 const MainContainer = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    nowPlaying();
-  }, []);
-  const nowPlaying = async () => {
-    const response = await fetch(nowPlayingAPIURL, options);
-    if (response.status === 200) {
-      const data = await response.json();
-      dispatch(addNowPlayingMovies(data));
-    }
-  };
+  const movie = useSelector((store) => store.movie.nowPlayingMovies);
+  if (!movie) return;
+  const mainMovie = movie[0];
+  const { title, overview, id } = mainMovie;
   return (
     <div>
-      <VideoBackground />
-      <MoviesList />
+      <VideoTitle title={title} info={overview} />
+      <VideoBackground movieId={id} />
     </div>
   );
 };
