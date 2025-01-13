@@ -1,6 +1,10 @@
 # Features
 
 - Created the Sign-in and Sign-up page with validation
+- Added fribase email and password authentication
+- Created a browse page
+- Added a background trailer video and title
+- added movies list
 
 # Link
 
